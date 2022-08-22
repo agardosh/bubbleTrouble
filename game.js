@@ -484,18 +484,11 @@ function touchReaction(evt) {
             game.state = true;
         }
     } else {
-        // BOTTOM LEFT
-        if (location.x < 233 && location.y > 540) {
-            console.log('left')
+        if (location.x < 233 && location.y > 540) { // BOTTOM LEFT
             player.moveLeft = true;
-        };
-        // BOTTOM RIGHT
-        if (location.x > canvasw - 233 && location.y > 540) {
-            console.log('right')
+        } else if (location.x > canvasw - 233 && location.y > 540) { // BOTTOM RIGHT
             player.moveRight = true;
-        };
-        // BOTTOM MIDDLE
-        if ((location.x > 630 && location.x < 870) && location.y > 540) {
+        } else { // REST OF SCREEN
             attack.init();
         }
         // ESC

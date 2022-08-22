@@ -25,6 +25,7 @@ window.onload = function() {
     ctx = canvas.getContext('2d');
     canvasw = canvas.width;
     canvash = canvas.height;
+    canvas.addEventListener('touchstart', touchReaction);
     document.addEventListener('keydown', keyboardReaction);
     document.addEventListener('keyup', endKeyboardReaction);
     loadSounds();
@@ -468,7 +469,8 @@ function choosePowerup() {
 // KEYBOARD
 
 function touchReaction(evt) {
-
+    touchEvent = evt.touches[0]
+    document.querySelector("#touch-location").innerHTML = 'touch x: ' + touchevent.clientX + ' touch y: ' + touchevent.clientY
 }
 
 function keyboardReaction(evt) {

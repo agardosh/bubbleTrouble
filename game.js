@@ -476,6 +476,9 @@ function choosePowerup() {
 
 function touchReaction(evt) {
     const rect = evt.target.getBoundingClientRect()
+    if (evt.touches.length > 2) {
+        evt.preventDefault()
+    }
     touchEvent = evt.touches[0]
     let location = {x: touchEvent.clientX-rect.left, y: touchEvent.clientY - rect.top}
     // evt.preventDefault();

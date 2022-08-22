@@ -11,6 +11,7 @@ var balls = [] // array of Ball objects
 var backgrounds = [] // array of Image objects
 var highscores = [] // array of objects
 var levels = [] // array of objects
+var adjustForMobile = 1
 
 function checkForMobile() {
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
@@ -25,6 +26,7 @@ window.onload = function() {
     canvasw = canvas.width;
     canvash = canvas.height;
     if (checkForMobile()) {
+        adjustForMobile = 0.5
         canvas.addEventListener('touchstart', touchReaction);
         canvas.addEventListener('touchend', endTouchReaction); 
         canvas.addEventListener('touchcancel', endTouchReaction);  
@@ -62,12 +64,12 @@ class Ball {
         this.ySpeed = ySpeed   
     }
     move() {
-        this.y += Ball.bounceSpeedCalculation(this.ySpeed);
-        this.ySpeed += 2;
+        this.y += Ball.bounceSpeedCalculation(this.ySpeed) * adjustForMobile;
+        this.ySpeed += 2 * adjustForMobile;
         if (this.ySpeed >= 80) {
             this.ySpeed = -79;
         };
-        this.x += this.xSpeed;
+        this.x += this.xSpeed * adjustForMobile;
     }
     draw() {
         ctx.save();
@@ -189,7 +191,7 @@ function playerDataReset() {
         },
         move() {
             if (this.moveLeft === true) {
-                this.x -= 10 * player.speedBoost.modifier;
+                this.x -= 10 * player.speedBoost.modifier * adjustForMobile;
                 if (sprite.currentDelay > sprite.delay) {
                     sprite.currentDelay = 0;
                     sprite.next()
@@ -197,7 +199,7 @@ function playerDataReset() {
                 sprite.currentDelay++
             }
             if (this.moveRight === true) {
-                this.x += 10  * player.speedBoost.modifier;
+                this.x += 10  * player.speedBoost.modifier * adjustForMobile;
                 if (sprite.currentDelay > sprite.delay) {
                     sprite.currentDelay = 0;
                     sprite.next()
@@ -242,7 +244,7 @@ function playerDataReset() {
             ctx.restore();
         },
         progress() {
-            this.height += 15;
+            this.height += 15 * adjustForMobile;
             if (this.height >= canvash - 90) {
                 this.height = 0;
                 this.active = false;
@@ -396,7 +398,7 @@ function initPowerup() {
         },
         move() {
             if (this.y < canvash - 100) {
-                this.y += 4
+                this.y += 4 * adjustForMobile
             } else if (this.y > canvash - 100) {
                 this.y = canvash - 100
             }

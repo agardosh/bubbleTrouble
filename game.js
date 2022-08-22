@@ -19,7 +19,7 @@ function checkForMobile() {
     return false
 }
 window.onload = function() {
-    console.log(checkForMobile())
+    document.querySelector("check").innerHTML = checkForMobile()
     canvas = document.querySelector("#myCanvas");
     ctx = canvas.getContext('2d');
     canvasw = canvas.width;

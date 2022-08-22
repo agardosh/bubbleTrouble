@@ -20,8 +20,6 @@ function checkForMobile() {
 }
 
 window.onload = function() {
-    document.querySelector("#check").innerHTML = checkForMobile()
-
     canvas = document.querySelector("#myCanvas");
     ctx = canvas.getContext('2d');
     canvasw = canvas.width;
@@ -475,7 +473,6 @@ function choosePowerup() {
 // KEYBOARD
 
 function touchReaction(evt) {
-    document.querySelector("#check").innerHTML = 'touch happened'
     const rect = evt.target.getBoundingClientRect()
     touchEvent = evt.touches[0]
     let location = {x: touchEvent.clientX-rect.left, y: touchEvent.clientY - rect.top}
@@ -510,7 +507,6 @@ function touchReaction(evt) {
 }
 
 function endTouchReaction(evt) {
-    document.querySelector("#check").innerHTML = 'touch ended'
     const rect = evt.target.getBoundingClientRect()
     touchEvent = evt.touches[0]
     // let location = {x: touchEvent.clientX - rect.left, y: touchEvent.clientY - rect.top}
@@ -576,7 +572,11 @@ function startScreen() {
     drawBG(0);
     drawText('Bubble Trouble', canvasw/2, 200, '80px Arial', 'green', true, true)
     drawText('Bubble Trouble', canvasw/2, 200, '80px Arial', 'black', false, true)
-    drawText('Press Space To Start', canvasw/2, 400, '50px Garamond', 'black', true, true)
+    if (checkForMobile()) {
+        drawText('Press Here To Start', canvasw/2, 400, '50px Garamond', 'black', true, true)
+    } else {
+        drawText('Press Space To Start', canvasw/2, 400, '50px Garamond', 'black', true, true)
+    }
     let timer = setInterval(function() {
         if (game.state === true) {
             gameDataReset();

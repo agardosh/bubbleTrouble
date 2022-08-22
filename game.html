@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Bubble Trouble
+        </title>
+    <link rel="stylesheet" href="game.css">
+    <script src="game.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/1.1.28/howler.min.js"></script>
+    </head>
+    <body>
+            <canvas id="myCanvas" width="1500" height="800"></canvas>
+        <div>   
+        <table id="highscores">
+        </table>
+        <form id="new-score">
+            <p id="score">Your Score: </p>
+            <label for="name">Name:</label>
+            <input type="text" id="name">
+            <button type="button" onclick="submitHighscore();">Submit</button>
+        </form>
+        </div>
+        <br>
+        <p>Sound effects downloaded from <a href='https://gfxsounds.com'>Gfx Sounds</a></p>
+        <p>Visual assets compiled from <a href='https://itch.io'>itch.io</a></p>
+        <div class="dropdown">
+            <div class="dropdown-content">
+                <a href="https://brullov.itch.io/oak-woods">Oak Woods</a>
+                <a href="https://ansimuz.itch.io/sunny-land-pixel-game-art">Sunny Land</a>
+                <a href="https://ninjikin.itch.io/fruit">Fruit+</a>
+                <a href="https://bakudas.itch.io/generic-dungeon-pack">Generic Dungeon Pack</a>
+                <a href="https://pop-shop-packs.itch.io/birds-2d-pixel-character-asset-pack">Garden Birds</a>
+            </div>
+            <button class="dropbtn">Asset Links</button>
+        </div>
+    </body>
+</html>

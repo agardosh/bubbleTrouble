@@ -477,22 +477,24 @@ function choosePowerup() {
 function touchReaction(evt) {
     document.querySelector("#check").innerHTML = 'touch happened'
     const rect = evt.target.getBoundingClientRect()
-    console.log(evt.touches)
     touchEvent = evt.touches[0]
     let location = {x: touchEvent.clientX-rect.left, y: touchEvent.clientY - rect.top}
-    evt.preventDefault();
+    // evt.preventDefault();
     if (game.state === false) {
         // Mid Screen
         if ((location.x > 500 && location.x < 1000) && (location.y > 200 && location.y < 600)) {
+            console.log('mid screen')
             game.state = true;
         }
     } else {
         // BOTTOM LEFT
         if (location.x < 233 && location.y > 540) {
+            console.log('left')
             player.moveLeft = true;
         };
         // BOTTOM RIGHT
-        if (location.x < canvasw - 233 && location.y > 540) {
+        if (location.x > canvasw - 233 && location.y > 540) {
+            console.log('right')
             player.moveRight = true;
         };
         // BOTTOM MIDDLE
@@ -513,16 +515,16 @@ function endTouchReaction(evt) {
     touchEvent = evt.touches[0]
     // let location = {x: touchEvent.clientX - rect.left, y: touchEvent.clientY - rect.top}
     // evt.preventDefault();
-    // if (game.state === true) {
-    //     // BOTTOM LEFT
-    //     if (location.x < 233 && location.y > 540) {
-    //         player.moveLeft = false;
-    //     };
-    //     // BOTTOM RIGHT
-    //     if (location.x < canvasw - 233 && location.y > 540) {
-    //         player.moveRight = false;
-    //     };
-    // }
+    if (game.state === true) {
+        // BOTTOM LEFT
+        // if (location.x < 233 && location.y > 540) {
+            player.moveLeft = false;
+        // };
+        // BOTTOM RIGHT
+        // if (location.x < canvasw - 233 && location.y > 540) {
+            player.moveRight = false;
+        // };
+    }
 }
 
 function keyboardReaction(evt) {

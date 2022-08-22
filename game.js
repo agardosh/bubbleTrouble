@@ -12,7 +12,14 @@ var backgrounds = [] // array of Image objects
 var highscores = [] // array of objects
 var levels = [] // array of objects
 
+function checkForMobile() {
+    if (typeof screen.orientation !== 'undefined') {
+        return true
+    }
+    return false
+}
 window.onload = function() {
+    console.log(checkForMobile())
     canvas = document.querySelector("#myCanvas");
     ctx = canvas.getContext('2d');
     canvasw = canvas.width;

@@ -469,6 +469,7 @@ function choosePowerup() {
 // KEYBOARD
 
 function touchReaction(evt) {
+    document.querySelector("#check").innerHTML = 'touch happened'
     touchEvent = evt.touches[0]
     document.querySelector("#touch-location").innerHTML = 'touch x: ' + touchevent.clientX + ' touch y: ' + touchevent.clientY
 }

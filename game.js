@@ -732,6 +732,7 @@ function drawEmptyScreen() {
 
 function drawArrows() {
     arrows.forEach(arrow => {
+        document.querySelector("#debug").innerHTML = 'drawArrows' + arrow
         ctx.save();
         ctx.drawImage(arrow.source, arrow.x, arrow.y, arrow.width, arrow.height)
         ctx.restore();

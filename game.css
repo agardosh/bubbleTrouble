@@ -1,3 +1,7 @@
+#myCanvas {
+    margin-left: -10px;
+}
+
 div {
     float: left;
     width: fit-content;

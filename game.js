@@ -477,9 +477,9 @@ function choosePowerup() {
 
 function loadArrows() {
     let left = new Image()
-    left.src = 'images/leftArrow.png'
+    left.src = 'images/leftarrow.png'
     let right = new Image()
-    right.src = 'images/rightArrow.png'
+    right.src = 'images/rightarrow.png'
     let leftArrow = {
         source: left,
         width: 233,

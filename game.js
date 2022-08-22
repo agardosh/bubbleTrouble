@@ -21,6 +21,9 @@ function checkForMobile() {
 
 window.onload = function() {
     document.querySelector("#check").innerHTML = checkForMobile()
+    if (checkForMobile() == 'mobile') {
+        document.querySelector("#meta").content="width=device-width, minimum-scale=1.0, maximum-scale = 1.0, user-scalable = no"
+    }
     canvas = document.querySelector("#myCanvas");
     ctx = canvas.getContext('2d');
     canvasw = canvas.width;

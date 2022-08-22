@@ -14,12 +14,13 @@ var levels = [] // array of objects
 
 function checkForMobile() {
     if (typeof screen.orientation !== 'undefined') {
-        return true
+        return ('mobile')
     }
-    return false
+    return ('desktop')
 }
+
 window.onload = function() {
-    document.querySelector("check").innerHTML = checkForMobile()
+    document.querySelector("#check").innerHTML = checkForMobile()
     canvas = document.querySelector("#myCanvas");
     ctx = canvas.getContext('2d');
     canvasw = canvas.width;
@@ -465,6 +466,10 @@ function choosePowerup() {
 }
 
 // KEYBOARD
+
+function touchReaction(evt) {
+
+}
 
 function keyboardReaction(evt) {
     if (game.state === false) {

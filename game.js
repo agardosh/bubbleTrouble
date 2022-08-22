@@ -14,23 +14,26 @@ var levels = [] // array of objects
 
 function checkForMobile() {
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-       return ('mobile')
+       return true
     }
-    return ('desktop')
+    return false
 }
 
 window.onload = function() {
     document.querySelector("#check").innerHTML = checkForMobile()
-    if (checkForMobile() == 'mobile') {
-        document.querySelector("#meta").content="width=device-width, minimum-scale=1.0, maximum-scale = 1.0, user-scalable = no"
-    }
+
     canvas = document.querySelector("#myCanvas");
     ctx = canvas.getContext('2d');
     canvasw = canvas.width;
     canvash = canvas.height;
-    canvas.addEventListener('touchstart', touchReaction);
-    document.addEventListener('keydown', keyboardReaction);
-    document.addEventListener('keyup', endKeyboardReaction);
+    if (checkForMobile()) {
+        canvas.addEventListener('touchstart', touchReaction);
+        canvas.addEventListener('touchend', endTouchReaction); 
+        canvas.addEventListener('touchcancel', endTouchReaction);  
+    } else {
+        document.addEventListener('keydown', keyboardReaction);
+        document.addEventListener('keyup', endKeyboardReaction);
+    }    
     loadSounds();
     gameDataReset();
     levelData();
@@ -475,7 +478,55 @@ function touchReaction(evt) {
     document.querySelector("#check").innerHTML = 'touch happened'
     const rect = evt.target.getBoundingClientRect()
     touchEvent = evt.touches[0]
-    document.querySelector("#touch-location").innerHTML = 'touch x: ' + (touchEvent.clientX-rect.left) + ' touch y: ' + (touchEvent.clientY - rect.top)
+    let location = {x: touchEvent.clientX-rect.left, y: touchEvent.clientY - rect.top}
+    evt.preventDefault();
+    if (game.state === false) {
+        // Mid Screen
+        if ((location.x > 500 && location.x < 1000) && (location.y > 200 && location.y < 600)) {
+            game.state = true;
+        }
+    } else {
+        // BOTTOM LEFT
+        if (location.x < 233 && location.y > 540) {
+            player.moveLeft = true;
+        };
+        // BOTTOM RIGHT
+        if (location.x < canvasw - 233 && location.y > 540) {
+            player.moveRight = true;
+        };
+        // BOTTOM MIDDLE
+        if ((location.x > 630 && location.x < 870) && location.y > 540) {
+            attack.init();
+        }
+        // ESC
+        if (evt.keyCode == 27) {
+            game.state = false;
+            pauseScreen();
+        }
+    }
+}
+
+function endTouchReaction(evt) {
+    document.querySelector("#check").innerHTML = 'touch happened'
+    const rect = evt.target.getBoundingClientRect()
+    touchEvent = evt.touches[0]
+    let location = {x: touchEvent.clientX-rect.left, y: touchEvent.clientY - rect.top}
+    evt.preventDefault();
+    if (game.state === false) {
+        // Mid Screen
+        if ((location.x > 500 && location.x < 1000) && (location.y > 200 && location.y < 600)) {
+            game.state = true;
+        }
+    } else {
+        // BOTTOM LEFT
+        if (location.x < 233 && location.y > 540) {
+            player.moveLeft = false;
+        };
+        // BOTTOM RIGHT
+        if (location.x < canvasw - 233 && location.y > 540) {
+            player.moveRight = false;
+        };
+    }
 }
 
 function keyboardReaction(evt) {

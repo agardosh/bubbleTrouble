@@ -11,7 +11,9 @@ var balls = [] // array of Ball objects
 var backgrounds = [] // array of Image objects
 var highscores = [] // array of objects
 var levels = [] // array of objects
+
 var adjustForMobile = 1
+var arrows = [] // array of objects
 
 function checkForMobile() {
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
@@ -26,6 +28,7 @@ window.onload = function() {
     canvasw = canvas.width;
     canvash = canvas.height;
     if (checkForMobile()) {
+        loadArrows()
         adjustForMobile = 0.5
         canvas.addEventListener('touchstart', touchReaction);
         canvas.addEventListener('touchend', endTouchReaction); 
@@ -472,6 +475,30 @@ function choosePowerup() {
     powerup.action = chosen.action 
 }
 
+function loadArrows() {
+    let left = new Image()
+    left.src = 'images/leftArrow.png'
+    let right = new Image()
+    right.src = 'images/rightArrow.png'
+    let leftArrow = {
+        source: left,
+        width: 233,
+        height: 160,
+        x: 0,
+        y: canvash - 160
+    }    
+    let rightArrow = {
+        source: right,
+        width: 233,
+        height: 160,
+        x: canvasw - 233,
+        y: canvash - 160
+    }
+    arrows.push(leftArrow)
+    arrows.push(rightArrow)
+    console.log(arrows)
+}
+
 // KEYBOARD
 
 function touchReaction(evt) {
@@ -703,6 +730,14 @@ function drawEmptyScreen() {
     drawTopLine();
 }
 
+function drawArrows() {
+    arrows.forEach(arrow => {
+        ctx.save();
+        ctx.drawImage(arrow.source, arrow.x, arrow.y, arrow.width, arrow.height)
+        ctx.restore();
+    })
+}
+
 // COLLISION AND HIT
 
 function playerCollision(ball) {
@@ -833,6 +868,9 @@ function gameplay() {
                 }
                 powerup.move()
             }
+        }
+        if (checkForMobile) {
+            drawArrows();
         }
         balls.forEach(function(ball, index) {
             if (game.state === true) {

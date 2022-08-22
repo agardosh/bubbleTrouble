@@ -13,8 +13,8 @@ var highscores = [] // array of objects
 var levels = [] // array of objects
 
 function checkForMobile() {
-    if (typeof screen.orientation !== 'undefined') {
-        return ('mobile')
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+       return ('mobile')
     }
     return ('desktop')
 }
@@ -470,8 +470,9 @@ function choosePowerup() {
 
 function touchReaction(evt) {
     document.querySelector("#check").innerHTML = 'touch happened'
+    const rect = evt.target.getBoundingClientRect()
     touchEvent = evt.touches[0]
-    document.querySelector("#touch-location").innerHTML = 'touch x: ' + touchevent.clientX + ' touch y: ' + touchevent.clientY
+    document.querySelector("#touch-location").innerHTML = 'touch x: ' + (touchEvent.clientX-rect.left) + ' touch y: ' + (touchEvent.clientY - rect.top)
 }
 
 function keyboardReaction(evt) {

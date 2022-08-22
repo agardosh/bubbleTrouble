@@ -772,7 +772,7 @@ function attackHit(ball, index) {
         nextLevelScreen();
     }
     let randomNumber = Math.ceil(Math.random() * 100)
-    if (true) {//randomNumber <= (game.level ** 2) / 2) {
+    if (randomNumber <= (game.level ** 2) / 2) {
         choosePowerup()
         powerup.y = ball.y + ball.radius * 2
         powerup.x = ball.x + ball.radius - powerup.width / 2

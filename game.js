@@ -31,33 +31,34 @@ window.onload = function() {
     canvash = canvas.height;
     canvas.style.border = '1px solid black';
     highScoreTable();
-    let message = ""
-    if (mobile) {
-        message = 'Press screen to launch game'
-    } else {
-        message = 'Press space to launch game'
-    }
-    drawText(message, canvasw/2, 200, '80px Arial', 'black', true, true)
-    initFirstContact();   
-}
+//     let message = ""
+//     if (mobile) {
+//         message = 'Press screen to launch game'
+//     } else {
+//         message = 'Press space to launch game'
+//     }
+//     drawText(message, canvasw/2, 200, '80px Arial', 'black', true, true)
+// //     initFirstContact();   
+// // }
 
-function initFirstContact() {
-    if (mobile) {
-        canvas.addEventListener('touchstart', firstContact, {once: true});    
-    } else {
-        document.addEventListener('keydown', firstContact, {once: true});
-    }
-}
+// // function initFirstContact() {
+// //     if (mobile) {
+// //         canvas.addEventListener('touchstart', firstContact, {once: true});    
+// //     } else {
+// //         document.addEventListener('keydown', firstContact, {once: true});
+// //     }
+// // }
 
-function firstContact(evt) {
-    if (mobile) {
-        loadGame()
-    } else {
-        if (evt.keyCode == 32) {
-            evt.preventDefault();
-            loadGame()
-        }       
-    }
+// // function firstContact(evt) {
+// //     if (mobile) {
+// //         loadGame()
+// //     } else {
+// //         if (evt.keyCode == 32) {
+// //             evt.preventDefault();
+// //             loadGame()
+// //         }       
+// //     }
+    loadGame()
 }
 
 function loadGame() {
@@ -974,7 +975,7 @@ function gameplay() {
                 powerup.move()
             }
         }
-        if (checkForMobile) {
+        if (mobile) {
             drawArrows();
         }
         balls.forEach(function(ball, index) {

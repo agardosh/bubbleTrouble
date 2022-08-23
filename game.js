@@ -539,16 +539,22 @@ function touchReaction(evt) {
     }
     touchEvent = evt.touches[0]
     let location = {x: touchEvent.clientX-rect.left, y: touchEvent.clientY - rect.top}
+    if (fullscreen) {
+        let xOffset = (screen.width - (canvasw * (screen.height / canvash)))
+        location.x /= screen.height/canvash
+        location.x -= xOffset
+        location.y /= screen.height/canvash  
+    }
     // evt.preventDefault();
     if (location.x < 300 && location.y < 200) {
-        if (fullscreen === false) {
+        if (!fullscreen) {
             openFullscreen();
         } else {
             closeFullscreen();
         }
         
     }
-    if (game.state === false) {
+    if (!game.state) {
         // Mid Screen
         if ((location.x > 500 && location.x < 1000) && (location.y > 200 && location.y < 600)) {
             game.state = true;
@@ -558,7 +564,7 @@ function touchReaction(evt) {
             player.moveLeft = true;
         } else if (location.x > canvasw - 233 && location.y > 540) { // BOTTOM RIGHT
             player.moveRight = true;
-        } else { // REST OF SCREEN
+        } else if (!(location.x < 300 && location.y < 200)) { // REST OF SCREEN
             attack.init();
         }
         // // ESC
@@ -679,6 +685,7 @@ function countdownToGame() {
             gameplay();
         }
         ctx.clearRect(0, 0, canvasw, canvash);
+        drawWhiteBG()
         drawText('Ouchie!', canvasw/2, 200, '50px Arial', 'black', true, true)
         drawText(counter, canvasw/2, 400, '80px Garamond', 'black', false, true)
         counter -= 1;
@@ -715,6 +722,7 @@ function gameOverScreen() {
             return
         }
         ctx.clearRect(0, 0, canvasw, canvash);
+        drawWhiteBG()
         drawText('Game Over :(', canvasw/2, 300, '80px Arial', 'red', true, true)
         drawText('Game Over :(', canvasw/2, 300, '80px Arial', 'black', false, true)
         if (game.score > highscores[highscores.length - 1].score || highscores.length < 10) {
@@ -759,6 +767,13 @@ function drawBG(index) {
     ctx.save();
     ctx.drawImage(backgrounds[index], 0, 0, canvasw, canvash)
     ctx.restore();
+}
+
+function drawWhiteBG() {
+    ctx.save()
+    ctx.fillStyle = 'white'
+    ctx.fillRect(0, 0, canvasw, canvash)
+    ctx.restore()
 }
 
 

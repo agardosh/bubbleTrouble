@@ -650,7 +650,7 @@ function endKeyboardReaction(evt) {
 
 function startScreen() {
     ctx.clearRect(0, 0, canvasw, canvash);
-    drawEmptyScreen();
+    drawWhiteBG();
     drawBG(0);
     drawText('Bubble Trouble', canvasw/2, 200, '80px Arial', 'green', true, true)
     drawText('Bubble Trouble', canvasw/2, 200, '80px Arial', 'black', false, true)

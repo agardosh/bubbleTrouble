@@ -7,11 +7,11 @@ var player = {} // object
 var attack = {} // oject
 var sounds = {} // object
 var powerup = {} // object
+var mobileAssets = {} // object
 var balls = [] // array of Ball objects
 var backgrounds = [] // array of Image objects
 var highscores = [] // array of objects
 var levels = [] // array of objects
-var arrows = [] // array of objects
 var fullscreen = false // bool
 var mobile = false // bool
 var adjustForMobile = 1 // int
@@ -62,7 +62,7 @@ function firstContact(evt) {
 
 function loadGame() {
     if (mobile) {
-        loadArrows()
+        loadMobileAssets()
         adjustForMobile = 0.5
         canvas.addEventListener('touchstart', touchReaction);
         canvas.addEventListener('touchend', endTouchReaction); 
@@ -507,7 +507,7 @@ function choosePowerup() {
     powerup.action = chosen.action 
 }
 
-function loadArrows() {
+function loadMobileAssets() {
     let left = new Image()
     left.src = 'images/leftarrow.png'
     let right = new Image()
@@ -526,8 +526,19 @@ function loadArrows() {
         x: canvasw - 233,
         y: canvash - 160
     }
-    arrows.push(leftArrow)
-    arrows.push(rightArrow)
+    mobileAssets.arrows = []
+    mobileAssets.arrows.push(leftArrow)
+    mobileAssets.arrows.push(rightArrow)
+    let fullScreen = new Image()
+    fullScreen.src = 'images/fullscreen.png'
+    let fullscreenIcon = {
+        source: fullScreen,
+        width: 100,
+        height: 67,
+        x: 0,
+        y: 0 
+    }
+    mobileAssets.fullscreen = fullscreenIcon
 }
 
 // KEYBOARD AND TOUCH
@@ -540,13 +551,13 @@ function touchReaction(evt) {
     touchEvent = evt.touches[0]
     let location = {x: touchEvent.clientX-rect.left, y: touchEvent.clientY - rect.top}
     if (fullscreen) {
+        evt.preventDefault()
         let xOffset = (screen.width - (canvasw * (screen.height / canvash)))
         location.x /= screen.height/canvash
         location.x -= xOffset
         location.y /= screen.height/canvash  
     }
-    // evt.preventDefault();
-    if (location.x < 300 && location.y < 200) {
+    if (location.x < 101 && location.y < 68) {
         if (!fullscreen) {
             openFullscreen();
         } else {
@@ -564,7 +575,7 @@ function touchReaction(evt) {
             player.moveLeft = true;
         } else if (location.x > canvasw - 233 && location.y > 540) { // BOTTOM RIGHT
             player.moveRight = true;
-        } else if (!(location.x < 300 && location.y < 200)) { // REST OF SCREEN
+        } else if (!(location.x < 101 && location.y < 68)) { // REST OF SCREEN
             attack.init();
         }
         // // ESC
@@ -646,6 +657,7 @@ function startScreen() {
     } else {
         drawText('Press Space To Start', canvasw/2, 400, '50px Garamond', 'black', true, true)
     }
+    drawFullscreenIcon()
     let timer = setInterval(function() {
         if (game.state === true) {
             gameDataReset();
@@ -688,6 +700,7 @@ function countdownToGame() {
         drawWhiteBG()
         drawText('Ouchie!', canvasw/2, 200, '50px Arial', 'black', true, true)
         drawText(counter, canvasw/2, 400, '80px Garamond', 'black', false, true)
+        drawFullscreenIcon()
         counter -= 1;
     }, 1000)
 }
@@ -709,6 +722,7 @@ function nextLevelScreen() {
         drawText(counter, canvasw/2, 400, '80px Garamond', 'white', true, true)
         drawText('Level ' + game.level, canvasw/2, 200, '80px Arial', 'black', false, true)
         drawText(counter, canvasw/2, 400, '80px Garamond', 'black', false, true)
+        drawFullscreenIcon()
         counter -= 1;
     }, 1000)
 }
@@ -725,6 +739,7 @@ function gameOverScreen() {
         drawWhiteBG()
         drawText('Game Over :(', canvasw/2, 300, '80px Arial', 'red', true, true)
         drawText('Game Over :(', canvasw/2, 300, '80px Arial', 'black', false, true)
+        drawFullscreenIcon()
         if (game.score > highscores[highscores.length - 1].score || highscores.length < 10) {
             drawText('New High Score!', canvasw/2, 450, '80px Arial', 'blue', true, true)
             drawText('New High Score!', canvasw/2, 450, '80px Arial', 'black', false, true)
@@ -758,9 +773,13 @@ function drawText(text, xLocation, yLocation, font, color, filled = true, center
 }
 
 function drawTopLine() {
-    drawText('Lives: ' + game.lives, canvasw - 200, 40)
-    drawText('Score: ' + game.score, 200, 40)
-    drawText('Level: ' + game.level, 60, 40)
+    if (mobile) {
+        drawFullscreenIcon()
+    }
+    let message = 'Lives: ' + game.lives + '            Score: ' + game.score + '           Level: ' + game.level
+    drawText(message, canvasw/2, 40, '30px Arial', 'black', true, true)
+    // drawText('Score: ' + game.score, 200, 40)
+    // drawText('Level: ' + game.level, 60, 40)
 }
 
 function drawBG(index) {
@@ -776,6 +795,14 @@ function drawWhiteBG() {
     ctx.restore()
 }
 
+function drawFullscreenIcon() {
+    if (mobile) {
+        ctx.save();
+        let img = mobileAssets.fullscreen
+        ctx.drawImage(img.source, img.x, img.y, img.width, img.height)
+        ctx.restore();    
+    }
+}
 
 function drawEmptyScreen() {
     drawBG(levels[game.level - 1].bg);
@@ -784,7 +811,7 @@ function drawEmptyScreen() {
 }
 
 function drawArrows() {
-    arrows.forEach(arrow => {
+    mobileAssets.arrows.forEach(arrow => {
         document.querySelector("#debug").innerHTML = 'drawArrows' + arrow
         ctx.save();
         ctx.drawImage(arrow.source, arrow.x, arrow.y, arrow.width, arrow.height)

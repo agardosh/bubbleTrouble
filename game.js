@@ -11,23 +11,57 @@ var balls = [] // array of Ball objects
 var backgrounds = [] // array of Image objects
 var highscores = [] // array of objects
 var levels = [] // array of objects
-
-var adjustForMobile = 1
 var arrows = [] // array of objects
+var fullscreen = false // bool
+var mobile = false // bool
+var adjustForMobile = 1 // int
 
 function checkForMobile() {
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
        return true
     }
-    return false
 }
 
+
 window.onload = function() {
+    mobile = checkForMobile()
     canvas = document.querySelector("#myCanvas");
     ctx = canvas.getContext('2d');
     canvasw = canvas.width;
     canvash = canvas.height;
-    if (checkForMobile()) {
+    canvas.style.border = '1px solid black';
+    highScoreTable();
+    let message = ""
+    if (mobile) {
+        message = 'Press screen to launch game'
+    } else {
+        message = 'Press space to launch game'
+    }
+    drawText(message, canvasw/2, 200, '80px Arial', 'black', true, true)
+    initFirstContact();   
+}
+
+function initFirstContact() {
+    if (mobile) {
+        canvas.addEventListener('touchstart', firstContact, {once: true});    
+    } else {
+        document.addEventListener('keydown', firstContact, {once: true});
+    }
+}
+
+function firstContact(evt) {
+    if (mobile) {
+        loadGame()
+    } else {
+        if (evt.keyCode == 32) {
+            evt.preventDefault();
+            loadGame()
+        }       
+    }
+}
+
+function loadGame() {
+    if (mobile) {
         loadArrows()
         adjustForMobile = 0.5
         canvas.addEventListener('touchstart', touchReaction);
@@ -43,9 +77,7 @@ window.onload = function() {
     loadBGS();
     initPowerup();
     setTimeout(function() {
-        highScoreTable();
         startScreen();
-        canvas.style.border = '1px solid black';
     }, 500)
 }
 
@@ -496,10 +528,9 @@ function loadArrows() {
     }
     arrows.push(leftArrow)
     arrows.push(rightArrow)
-    console.log(arrows)
 }
 
-// KEYBOARD
+// KEYBOARD AND TOUCH
 
 function touchReaction(evt) {
     const rect = evt.target.getBoundingClientRect()
@@ -509,10 +540,17 @@ function touchReaction(evt) {
     touchEvent = evt.touches[0]
     let location = {x: touchEvent.clientX-rect.left, y: touchEvent.clientY - rect.top}
     // evt.preventDefault();
+    if (location.x < 300 && location.y < 200) {
+        if (fullscreen === false) {
+            openFullscreen();
+        } else {
+            closeFullscreen();
+        }
+        
+    }
     if (game.state === false) {
         // Mid Screen
         if ((location.x > 500 && location.x < 1000) && (location.y > 200 && location.y < 600)) {
-            console.log('mid screen')
             game.state = true;
         }
     } else {
@@ -523,11 +561,11 @@ function touchReaction(evt) {
         } else { // REST OF SCREEN
             attack.init();
         }
-        // ESC
-        if (evt.keyCode == 27) {
-            game.state = false;
-            pauseScreen();
-        }
+        // // ESC
+        // if (evt.keyCode == 27) {
+        //     game.state = false;
+        //     pauseScreen();
+        // }
     }
 }
 
@@ -597,7 +635,7 @@ function startScreen() {
     drawBG(0);
     drawText('Bubble Trouble', canvasw/2, 200, '80px Arial', 'green', true, true)
     drawText('Bubble Trouble', canvasw/2, 200, '80px Arial', 'black', false, true)
-    if (checkForMobile()) {
+    if (mobile) {
         drawText('Press Here To Start', canvasw/2, 400, '50px Garamond', 'black', true, true)
     } else {
         drawText('Press Space To Start', canvasw/2, 400, '50px Garamond', 'black', true, true)
@@ -834,6 +872,30 @@ function playerHit(index) {
         game.state = false;
         gameOverScreen();
     }
+}
+
+// FULLSCREEN
+
+function openFullscreen() {
+    if (canvas.requestFullscreen) {
+        canvas.requestFullscreen();
+    } else if (canvas.webkitRequestFullscreen) { /* Safari */
+        canvas.webkitRequestFullscreen();
+    } else if (canvas.msRequestFullscreen) { /* IE11 */
+        canvas.msRequestFullscreen();
+    }
+    fullscreen = true;
+}
+  
+function closeFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { /* Safari */
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { /* IE11 */
+        document.msExitFullscreen();
+    }
+    fullscreen = false;
 }
 
 // GAME

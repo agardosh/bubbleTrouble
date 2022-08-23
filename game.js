@@ -650,6 +650,7 @@ function endKeyboardReaction(evt) {
 
 function startScreen() {
     ctx.clearRect(0, 0, canvasw, canvash);
+    drawEmptyScreen();
     drawBG(0);
     drawText('Bubble Trouble', canvasw/2, 200, '80px Arial', 'green', true, true)
     drawText('Bubble Trouble', canvasw/2, 200, '80px Arial', 'black', false, true)
@@ -888,7 +889,7 @@ function attackHit(ball, index) {
     if (balls.length == 0) {
         sounds.win.play()
         ctx.clearRect(0, 0, canvasw, canvash);
-        drawEmptyScreen()
+        drawWhiteBG()
         game.state = false;
         game.level += 1;
         nextLevelScreen();

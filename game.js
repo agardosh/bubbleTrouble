@@ -12,7 +12,6 @@ var balls = [] // array of Ball objects
 var backgrounds = [] // array of Image objects
 var highscores = [] // array of objects
 var levels = [] // array of objects
-var fullscreen = false // bool
 var mobile = false // bool
 var adjustForMobile = 1 // int
 
@@ -31,33 +30,6 @@ window.onload = function() {
     canvash = canvas.height;
     canvas.style.border = '1px solid black';
     highScoreTable();
-//     let message = ""
-//     if (mobile) {
-//         message = 'Press screen to launch game'
-//     } else {
-//         message = 'Press space to launch game'
-//     }
-//     drawText(message, canvasw/2, 200, '80px Arial', 'black', true, true)
-// //     initFirstContact();   
-// // }
-
-// // function initFirstContact() {
-// //     if (mobile) {
-// //         canvas.addEventListener('touchstart', firstContact, {once: true});    
-// //     } else {
-// //         document.addEventListener('keydown', firstContact, {once: true});
-// //     }
-// // }
-
-// // function firstContact(evt) {
-// //     if (mobile) {
-// //         loadGame()
-// //     } else {
-// //         if (evt.keyCode == 32) {
-// //             evt.preventDefault();
-// //             loadGame()
-// //         }       
-// //     }
     loadGame()
 }
 
@@ -566,15 +538,22 @@ function touchReaction(evt) {
     }
     touchEvent = evt.touches[0]
     let location = {x: touchEvent.clientX-rect.left, y: touchEvent.clientY - rect.top}
-    if (fullscreen) {
+    if (document.fullscreenElement) {
         evt.preventDefault()
-        let xOffset = (screen.width - (canvasw * (screen.height / canvash)))
-        location.x /= screen.height/canvash
-        location.x -= xOffset
-        location.y /= screen.height/canvash  
+        if (screen.width/screen.height > canvasw/canvash) { // if screen wider than canvas
+            let xOffset = (screen.width - (canvasw * (screen.height / canvash)))
+            location.x /= screen.height/canvash
+            location.x -= xOffset
+            location.y /= screen.height/canvash  
+        } else {
+            let yOffset = (screen.height - (canvash * (screen.width / canvasw)))
+            location.y -= (yOffset/2)
+            location.y /= screen.width/canvasw
+            location.x /= screen.width/canvasw
+        }
     }
     if (location.x < 101 && location.y < 68) {
-        if (!fullscreen) {
+        if (!document.fullscreenElement) {
             openFullscreen();
         } else {
             closeFullscreen();
@@ -587,11 +566,11 @@ function touchReaction(evt) {
             game.state = true;
         }
     } else {
-        if (location.x < 233 && location.y > 540) { // BOTTOM LEFT
+        if ((location.x > 0 && location.x < 233) && (location.y > 540 && location.y < canvash)) { // BOTTOM LEFT
             player.moveLeft = true;
-        } else if (location.x > canvasw - 233 && location.y > 540) { // BOTTOM RIGHT
+        } else if ((location.x < canvasw && location.x > canvasw - 233) && (location.y > 540 && location.y < canvash)) { // BOTTOM RIGHT
             player.moveRight = true;
-        } else if (!(location.x < 101 && location.y < 68)) { // REST OF SCREEN
+        } else if (!(location.x < 101 && location.y < 68) && (location.x > 0 && location.x < canvasw) && (location.y > 0 && location.y < canvash)) { // REST OF SCREEN
             attack.init();
         }
         // // ESC
@@ -795,8 +774,6 @@ function drawTopLine() {
     }
     let message = 'Lives: ' + game.lives + '            Score: ' + game.score + '           Level: ' + game.level
     drawText(message, canvasw/2, 40, '30px Arial', 'black', true, true)
-    // drawText('Score: ' + game.score, 200, 40)
-    // drawText('Level: ' + game.level, 60, 40)
 }
 
 function drawBG(index) {
@@ -942,23 +919,21 @@ function playerHit(index) {
 function openFullscreen() {
     if (canvas.requestFullscreen) {
         canvas.requestFullscreen();
-    } else if (canvas.webkitRequestFullscreen) { /* Safari */
+    } else if (canvas.webkitRequestFullscreen) { // Safari
         canvas.webkitRequestFullscreen();
-    } else if (canvas.msRequestFullscreen) { /* IE11 */
+    } else if (canvas.msRequestFullscreen) { // IE11
         canvas.msRequestFullscreen();
     }
-    fullscreen = true;
 }
   
 function closeFullscreen() {
     if (document.exitFullscreen) {
         document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) { /* Safari */
+    } else if (document.webkitExitFullscreen) { // Safari
         document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) { /* IE11 */
+    } else if (document.msExitFullscreen) { // IE11
         document.msExitFullscreen();
     }
-    fullscreen = false;
 }
 
 // GAME

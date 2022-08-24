@@ -892,7 +892,7 @@ function rollForPowerup(ball) {
     if (chance > 15) {
         chance = 15
     }
-    if (true){//randomNumber <= chance) {
+    if (randomNumber <= chance) {
         choosePowerup()
         powerup.y = ball.y + ball.radius * 2
         powerup.x = ball.x + ball.radius - powerup.width / 2

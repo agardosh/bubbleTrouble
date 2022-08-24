@@ -262,7 +262,8 @@ function playerDataReset() {
             ctx.restore();
         }
     };
-
+    let attackSource = new Image()
+    attackSource.src = 'images/attack.png'
     attack = {
         x: 0,
         y: canvash - 100,
@@ -270,13 +271,8 @@ function playerDataReset() {
         active: false,
         draw() {
             ctx.save();
-            ctx.translate(this.x, player.y + player.height);
-            ctx.strokeStyle = 'purple';
-            ctx.lineWidth = 5;
-            ctx.beginPath();
-            ctx.moveTo(0,0);
-            ctx.lineTo(0, -this.height );
-            ctx.stroke();
+            ctx.translate(this.x, player.y + player.height - attack.height);
+            ctx.drawImage(attackSource, 0, 0, 10, this.height, 0, 0, 10, this.height)
             ctx.restore();
         },
         progress() {
@@ -492,15 +488,34 @@ function choosePowerup() {
                 powerupReset()
             }
         },
-        // {
-        //     name: 'bow',
-        //     action() {
-
-        //     }
-        // }
+        {
+            name: 'bow',
+            spriteNum: 4,
+            sound: sounds.boop,
+            action() {
+                let pops = balls.length
+                while (pops > 0) {
+                    popBall(balls[0], 0)
+                    pops -= 1
+                }
+                powerupReset()
+            }
+        }
 
     ]
-    let chosen = powerups[Math.floor(Math.random() * 4)]
+    let chosen = {}
+    let roll = Math.floor(Math.random() * 100)
+    if (roll < 50) {
+        chosen = powerups[2] // points 50%
+    } else if (roll < 68) {
+        chosen = powerups[1] // speed 18%
+    } else if (roll < 86) {
+        chosen = powerups[3] // shield 18%
+    } else if (roll < 93) {
+        chosen = powerups[4] // bow 7%
+    } else if (roll < 100) {
+        chosen = powerups[0] // life 7%
+    }
     powerup.name = chosen.name
     powerup.active = true
     powerup.spriteNum = chosen.spriteNum - 1
@@ -868,9 +883,7 @@ function powerupCollision() {
     return (xDistance + yDistance <= 0)   
 }
 
-function attackHit(ball, index) {
-    attack.height = 0;
-    attack.active = false;
+function popBall(ball, index) {
     if (ball.radius / 2 > 5) {
         game.score += 100
         let newBalls = {
@@ -889,17 +902,23 @@ function attackHit(ball, index) {
     if (balls.length == 0) {
         sounds.win.play()
         ctx.clearRect(0, 0, canvasw, canvash);
-        drawWhiteBG()
+        drawEmptyScreen()
         game.state = false;
         game.level += 1;
         nextLevelScreen();
     }
+}
+
+function rollForPowerup(ball) {
     let randomNumber = Math.ceil(Math.random() * 100)
-    if (randomNumber <= (game.level ** 2) / 2) {
+    let chance = ((game.level ** 2) / 2) + 1
+    if (chance > 15) {
+        chance = 15
+    }
+    if (true){//randomNumber <= chance) {
         choosePowerup()
         powerup.y = ball.y + ball.radius * 2
         powerup.x = ball.x + ball.radius - powerup.width / 2
-
     }
 }
 
@@ -986,7 +1005,10 @@ function gameplay() {
                 if (attack.active === true) {
                     if (attackCollision(ball)) {
                         sounds.boop.play();
-                        attackHit(ball, index);
+                        attack.height = 0;
+                        attack.active = false;
+                        popBall(ball, index);
+                        rollForPowerup(ball);
                     };
                 };
                 if (playerCollision(ball)) {
